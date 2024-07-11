@@ -13,15 +13,12 @@ int main() {
     InitWindow(screenWidth, screenHeight, "cncProgram");
     SetTargetFPS(60);
 
-    while (!WindowShouldClose()) {
-        Vector2 mousePoint = GetMousePosition();
-
-       
-
+    while (!WindowShouldClose()) {      
         BeginDrawing();
+
         ClearBackground(RAYWHITE);
 
-      
+        EndDrawing();
     }
 
     CloseWindow();
