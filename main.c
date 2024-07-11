@@ -47,7 +47,7 @@ int main() {
 
         //Topbar
         DrawRectangle(600,0,424,50,(Color){89,90,108,255});     
-       
+        DrawRectangle(0,50,1024,550,SELECTED_LIGHT);
        //Switch tabs
         for (int i = 0; i < menuTabs; i++) {
             if (checkButtonPressed(&buttons[i])) {
@@ -57,13 +57,13 @@ int main() {
                 }
                 switch(i) {
                     case 0: //Setup
-                        resetExcept(i);
+                        resetExcept(i);                        
                         break;
                     case 1: //Tools
                         resetExcept(i);
                         break;
                     case 2: //Dashboard
-                        resetExcept(i);
+                        resetExcept(i);                      
                         break;
                 }                             
             } 
