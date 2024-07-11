@@ -1,6 +1,4 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
         {
@@ -20,7 +18,7 @@
                     "PROJECT_NAME=${fileBasenameNoExtension}",
                     "OBJS=${fileBasenameNoExtension}.c",
                     "BUILD_MODE=DEBUG"
-                ],
+                ]
             },
             "osx": {
                 "args": [
@@ -28,7 +26,7 @@
                     "PROJECT_NAME=${fileBasenameNoExtension}",
                     "OBJS=${fileBasenameNoExtension}.c",
                     "BUILD_MODE=DEBUG"
-                ],
+                ]
             },
             "group": {
                 "kind": "build",
@@ -53,14 +51,14 @@
                     "RAYLIB_PATH=C:/raylib/raylib",
                     "PROJECT_NAME=${fileBasenameNoExtension}",
                     "OBJS=${fileBasenameNoExtension}.c"
-                ],
+                ]
             },
             "osx": {
                 "args": [
                     "RAYLIB_PATH=<path_to_raylib>/raylib",
                     "PROJECT_NAME=${fileBasenameNoExtension}",
                     "OBJS=${fileBasenameNoExtension}.c"
-                ],
+                ]
             },
             "group": "build",
             "problemMatcher": [

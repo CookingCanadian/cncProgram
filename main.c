@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include <stdio.h>
 
 #define TEXT1_LIGHT (Color){228,229,241, 255}
 #define TEXT2_LIGHT (Color){210,211,219, 255}
@@ -31,18 +32,34 @@ int main() {
     InitWindow(screenWidth, screenHeight, "cncProgram");
     SetTargetFPS(60);
 
-    Button homeButton = {0, 0, 100, 50, "Test", MUTED_LIGHT, TEXT1_LIGHT, false};
+    Button buttons[] = {
+        {0, 0, 200, 50, "ALIGN", DARK_LIGHT, TEXT1_LIGHT, true},
+        {200, 0, 200, 50, "TOOLS", MUTED_LIGHT, TEXT1_LIGHT, false},
+        {400, 0, 200, 50, "DASHBOARD", MUTED_LIGHT, TEXT1_LIGHT, false}
+    };
+    int numButtons = sizeof(buttons) / sizeof(buttons[0]);
+
+
 
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
-        if (checkButtonPressed(&homeButton)) {
-            homeButton.isPressed = !homeButton.isPressed;  // Toggle button state
-            homeButton.backgroundColor = homeButton.isPressed ? DARK_LIGHT : MUTED_LIGHT;  // Change color based on state
+        for (int i = 0; i < numButtons; i++) {
+            if (checkButtonPressed(&buttons[i])) {
+                if (!buttons[i].isPressed) {
+                    buttons[i].isPressed = true;
+                    buttons[i].backgroundColor = DARK_LIGHT;                  
+                }
+                for (int j = 0; j <numButtons; j++) {
+                    if (j != i) {
+                        buttons[j].isPressed = false;
+                        buttons[j].backgroundColor = MUTED_LIGHT;      
+                    }
+                }               
+            } 
+            drawButton(&buttons[i]);
         }
-
-        drawButton(&homeButton);
         EndDrawing();
     }
 
