@@ -1,10 +1,13 @@
 #include "raylib.h"
 #include <stdio.h>
 
-#define TEXT1_LIGHT (Color){228,229,241, 255}
-#define TEXT2_LIGHT (Color){210,211,219, 255}
-#define MUTED_LIGHT (Color){147,148,165, 255}
-#define DARK_LIGHT (Color){72,75,106, 255}
+#define TEXT1_LIGHT (Color){228,229,241,255}
+#define TEXT2_LIGHT (Color){210,211,219,255}
+#define SELECTED_LIGHT (Color){197,198,210,255}
+#define UNSELECTED_LIGHT (Color){147,148,165,255}
+
+int darkMode = 0;
+const int menuTabs = 3;
 
 typedef struct Button {
     int xPos;
@@ -17,46 +20,52 @@ typedef struct Button {
     bool isPressed;
 } Button;
 
-int darkMode = 0;
-int selectedTab = 0;
+//Menu tabs for topbar
+Button buttons[] = {
+    {0,0,200,50, "ALIGN", SELECTED_LIGHT, TEXT1_LIGHT, true},
+    {200,0,200,50, "TOOLS", UNSELECTED_LIGHT, TEXT1_LIGHT, false},
+    {400,0,200,50, "DASHBOARD", UNSELECTED_LIGHT, TEXT1_LIGHT, false}
+};
+
 
 // Functions
 void drawButton(Button *button);
+void resetExcept(int skip);
 bool checkButtonPressed(Button *button);
 
 // Main
 int main() {
     const int screenWidth = 1024;
-    const int screenHeight = 600;
+    const int screenHeight = 600;    
     
     InitWindow(screenWidth, screenHeight, "cncProgram");
     SetTargetFPS(60);
-
-    Button buttons[] = {
-        {0, 0, 200, 50, "ALIGN", DARK_LIGHT, TEXT1_LIGHT, true},
-        {200, 0, 200, 50, "TOOLS", MUTED_LIGHT, TEXT1_LIGHT, false},
-        {400, 0, 200, 50, "DASHBOARD", MUTED_LIGHT, TEXT1_LIGHT, false}
-    };
-    int numButtons = sizeof(buttons) / sizeof(buttons[0]);
-
-
 
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
-        for (int i = 0; i < numButtons; i++) {
+        //Topbar
+        DrawRectangle(600,0,424,50,(Color){89,90,108,255});     
+       
+       //Switch tabs
+        for (int i = 0; i < menuTabs; i++) {
             if (checkButtonPressed(&buttons[i])) {
                 if (!buttons[i].isPressed) {
                     buttons[i].isPressed = true;
-                    buttons[i].backgroundColor = DARK_LIGHT;                  
+                    buttons[i].backgroundColor = SELECTED_LIGHT;                  
                 }
-                for (int j = 0; j <numButtons; j++) {
-                    if (j != i) {
-                        buttons[j].isPressed = false;
-                        buttons[j].backgroundColor = MUTED_LIGHT;      
-                    }
-                }               
+                switch(i) {
+                    case 0: //Setup
+                        resetExcept(i);
+                        break;
+                    case 1: //Tools
+                        resetExcept(i);
+                        break;
+                    case 2: //Dashboard
+                        resetExcept(i);
+                        break;
+                }                             
             } 
             drawButton(&buttons[i]);
         }
@@ -76,6 +85,14 @@ void drawButton(Button *button) {
     int textYPos = button->yPos + (button->ySize - textHeight) / 2;
     
     DrawText(button->Text, textXPos, textYPos, 20, button->textColor);
+}
+
+void resetExcept(int skip) {
+    for (int i = 0; i < menuTabs; i++) {
+        if (i==skip){continue;}
+        buttons[i].isPressed = false;
+        buttons[i].backgroundColor = UNSELECTED_LIGHT;
+    }
 }
 
 bool checkButtonPressed(Button *button) {
