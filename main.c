@@ -1,6 +1,8 @@
 #include "raylib.h"
 #include <stdio.h>
 
+#include<string.h>
+
 #define TEXT1_LIGHT (Color){228,229,241,255}
 #define TEXT2_LIGHT (Color){210,211,219,255}
 #define SELECTED_LIGHT (Color){197,198,210,255}
@@ -31,43 +33,49 @@ Button buttons[] = {
 // Functions
 void drawButton(Button *button);
 void resetExcept(int skip);
+void povertyOutput(const char*text) {
+    DrawText(text, 500,250,50,(Color){89,90,108,255});
+}
 bool checkButtonPressed(Button *button);
 
 // Main
 int main() {
     const int screenWidth = 1024;
-    const int screenHeight = 600;    
-    
+    const int screenHeight = 600;        
+    char info[10] = "nil";
     InitWindow(screenWidth, screenHeight, "cncProgram");
-    SetTargetFPS(60);
-
-    while (!WindowShouldClose()) {
+    SetTargetFPS(60);    
+    while (!WindowShouldClose()) {        
         BeginDrawing();
-        ClearBackground(RAYWHITE);
-
+        ClearBackground(RAYWHITE);        
         //Topbar
         DrawRectangle(600,0,424,50,(Color){89,90,108,255});     
-        DrawRectangle(0,50,1024,550,SELECTED_LIGHT);
+        DrawRectangle(0,50,1024,550,SELECTED_LIGHT);        
+        povertyOutput(info);
        //Switch tabs
         for (int i = 0; i < menuTabs; i++) {
             if (checkButtonPressed(&buttons[i])) {
                 if (!buttons[i].isPressed) {
                     buttons[i].isPressed = true;
                     buttons[i].backgroundColor = SELECTED_LIGHT;                  
-                }
-                switch(i) {
+                }          
+                
+                switch(i) {                    
                     case 0: //Setup
-                        resetExcept(i);                        
+                        resetExcept(i); 
+                        strcpy(info,"button1");          
                         break;
                     case 1: //Tools
                         resetExcept(i);
+                        strcpy(info,"button2");
                         break;
                     case 2: //Dashboard
-                        resetExcept(i);                      
+                        resetExcept(i);  
+                        strcpy(info,"button3");                   
                         break;
                 }                             
             } 
-            drawButton(&buttons[i]);
+            drawButton(&buttons[i]);                        
         }
         EndDrawing();
     }
