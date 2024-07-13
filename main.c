@@ -9,74 +9,42 @@
 #define UNSELECTED_LIGHT (Color){147,148,165,255}
 
 int darkMode = 0;
-const int menuTabs = 3;
 
-typedef struct Button {
-    int xPos;
-    int yPos;
-    int xSize;
-    int ySize;
-    const char *Text;
-    Color backgroundColor;
-    Color textColor;
-    bool isPressed;
-} Button;
-
-//Menu tabs for topbar
-Button buttons[] = {
-    {0,0,200,50, "ALIGN", SELECTED_LIGHT, TEXT1_LIGHT, true},
-    {200,0,200,50, "TOOLS", UNSELECTED_LIGHT, TEXT1_LIGHT, false},
-    {400,0,200,50, "DASHBOARD", UNSELECTED_LIGHT, TEXT1_LIGHT, false}
-};
-
-
-// Functions
-void drawButton(Button *button);
-void resetExcept(int skip);
-void povertyOutput(const char*text) {
-    DrawText(text, 500,250,50,(Color){89,90,108,255});
-}
-bool checkButtonPressed(Button *button);
-
-// Main
 int main() {
     const int screenWidth = 1024;
-    const int screenHeight = 600;        
-    char info[10] = "nil";
+    const int screenHeight = 600;  
+
+    //CNC Values
+    int spindleRPM = 23000;
+
+    SetConfigFlags(FLAG_MSAA_4X_HINT);//Anti-Aliasing
     InitWindow(screenWidth, screenHeight, "cncProgram");
+
+    //Loading Fonts
+    //Font regular = LoadFontEx("JosefinSans-Regular.ttf",30,0,0);
+    Font semiBold = LoadFontEx("JosefinSans-SemiBold.ttf",30,0,0);
+    Font bold = LoadFontEx("JosefinSans-Bold.ttf",15,0,0);
+    //Calculating Font Positions (Unchanging)
+    Vector2 spindlePosTextSize = MeasureTextEx(bold,"SPINDLE RPM",15,0);
+    
+
     SetTargetFPS(60);    
     while (!WindowShouldClose()) {        
         BeginDrawing();
         ClearBackground(RAYWHITE);        
-        //Topbar
-        DrawRectangle(600,0,424,50,(Color){89,90,108,255});     
-        DrawRectangle(0,50,1024,550,SELECTED_LIGHT);        
-        povertyOutput(info);
-       //Switch tabs
-        for (int i = 0; i < menuTabs; i++) {
-            if (checkButtonPressed(&buttons[i])) {
-                if (!buttons[i].isPressed) {
-                    buttons[i].isPressed = true;
-                    buttons[i].backgroundColor = SELECTED_LIGHT;                  
-                }          
-                
-                switch(i) {                    
-                    case 0: //Setup
-                        resetExcept(i); 
-                        strcpy(info,"button1");          
-                        break;
-                    case 1: //Tools
-                        resetExcept(i);
-                        strcpy(info,"button2");
-                        break;
-                    case 2: //Dashboard
-                        resetExcept(i);  
-                        strcpy(info,"button3");                   
-                        break;
-                }                             
-            } 
-            drawButton(&buttons[i]);                        
+        //Lower Dashboard 
+        DrawRectangle(0,350,1024,250,(Color){43,44,64,255});//Spindle Info
+        DrawCircleSector((Vector2){125,475},100,140,400,40,(Color){217,217,217,255});
+        DrawCircle(125,475,75,(Color){43,44,64,255});
+        DrawCircle(125,475,62.5,(Color){35,36,53,255});
+        if (IsFontReady(bold)&&IsFontReady(semiBold)) {         
+            char spindleRPMText[5];
+            sprintf(spindleRPMText,"%d",spindleRPM);
+            Vector2 spindleRPMTextSize = MeasureTextEx(semiBold,spindleRPMText,30,0);
+            DrawTextEx(bold,"SPINDLE RPM",(Vector2){125-(spindlePosTextSize.x/2),550},15,0,(Color){229,228,250,255});     
+            DrawTextEx(semiBold,spindleRPMText,(Vector2){125-(spindleRPMTextSize.x/2),475-(spindleRPMTextSize.y/2)},30,0,(Color){229,228,250,255});
         }
+        
         EndDrawing();
     }
 
@@ -84,30 +52,3 @@ int main() {
     return 0;
 }
 
-void drawButton(Button *button) {
-    DrawRectangle(button->xPos, button->yPos, button->xSize, button->ySize, button->backgroundColor);
-
-    int textWidth = MeasureText(button->Text, 20); // 20 is the font size
-    int textHeight = 20; // 20 is the font size    
-    int textXPos = button->xPos + (button->xSize - textWidth) / 2;
-    int textYPos = button->yPos + (button->ySize - textHeight) / 2;
-    
-    DrawText(button->Text, textXPos, textYPos, 20, button->textColor);
-}
-
-void resetExcept(int skip) {
-    for (int i = 0; i < menuTabs; i++) {
-        if (i==skip){continue;}
-        buttons[i].isPressed = false;
-        buttons[i].backgroundColor = UNSELECTED_LIGHT;
-    }
-}
-
-bool checkButtonPressed(Button *button) {
-    if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){button->xPos, button->yPos, button->xSize, button->ySize})) {
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-            return true;
-        }
-    }
-    return false;
-}
