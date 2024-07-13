@@ -1,12 +1,5 @@
 #include "raylib.h"
-#include <stdio.h>
 
-#include<string.h>
-
-#define TEXT1_LIGHT (Color){228,229,241,255}
-#define TEXT2_LIGHT (Color){210,211,219,255}
-#define SELECTED_LIGHT (Color){197,198,210,255}
-#define UNSELECTED_LIGHT (Color){147,148,165,255}
 
 int darkMode = 0;
 
@@ -16,6 +9,10 @@ int main() {
 
     //CNC Values
     int spindleRPM = 0;
+
+    //GUI/Program Values
+    const int deltaLerp = 1;
+    int tabHighlightY = 0;
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);//Anti-Aliasing
     InitWindow(screenWidth, screenHeight, "cncProgram");
@@ -30,7 +27,7 @@ int main() {
     int spindleTextSizeX = (spindleTextSize.x/2);
     
     SetTargetFPS(60);    
-    if (IsFontReady(bold)&&IsFontReady(semiBold)&&IsFontReady(regular)) {         
+    if (IsFontReady(bold) && IsFontReady(semiBold) && IsFontReady(regular)) {         
         while (!WindowShouldClose()) {        
             BeginDrawing();
             ClearBackground(RAYWHITE);        
@@ -50,7 +47,21 @@ int main() {
 
             //Side Tabs
             DrawRectangle(0,0,200,350,(Color){82,83,109,255});
+            DrawRectangle(0,tabHighlightY,200,50,(Color){148,149,177,255});
 
+            //Mouse Handler
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                Vector2 mousePosition = GetMousePosition();
+                if (mousePosition.x < 200 && mousePosition.y > 350) { //Side Tab Area
+                    if (mousePosition.y >=0 && mousePosition.y < 50) { //Button 1
+
+                    } else if (mousePosition.y >= 50 && mousePosition.y < 100) { //Button 2
+
+                    } else if (mousePosition.y >=100 && mousePosition.y < 150) { //Button 3
+
+                    }
+                }
+            }
             EndDrawing();
         }
     }
