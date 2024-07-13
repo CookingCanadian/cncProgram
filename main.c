@@ -32,21 +32,28 @@ int main() {
     int toolTextSizeY = 129-((MeasureTextEx(bold25,"TOOL",25,0).y)/2);
     int runTextSizeY = 179-((MeasureTextEx(bold25,"RUN",25,0).y)/2);
     
-    SetTargetFPS(200);    
+    //SetTargetFPS(200);    
     if (IsFontReady(bold25) && IsFontReady(bold15) && IsFontReady(semiBold) && IsFontReady(regular)) {         
         while (!WindowShouldClose()) {        
             BeginDrawing();
             ClearBackground(RAYWHITE);        
-            //Lower Dashboard 
-            DrawRectangle(0,350,1024,250,(Color){43,44,64,255});//Spindle Info
-            DrawCircleSector((Vector2){125,475},100,140,400,40,(Color){217,217,217,255});
-            DrawCircle(125,475,75,(Color){43,44,64,255});
-            DrawCircle(125,475,62.5,(Color){35,36,53,255});
+            //Lower Dashboard       
             char spindleRPMText[5];
             sprintf(spindleRPMText,"%'d",spindleRPM);
             Vector2 spindleRPMTextSize = MeasureTextEx(semiBold,spindleRPMText,30,0);
+
+            DrawRectangle(0,350,1024,250,(Color){43,44,64,255}); //Background   
+            DrawRectangle(217,383,150,50,GREEN);  
+            DrawCircle(125,475,130,(Color){43,44,64,255}); //Feed Icon            
+            DrawRing((Vector2){125,475},125,130,315,405,40,(Color){241,240,255,255}); 
+
+            DrawRing((Vector2){125,475},70,100,135,405,40,(Color){241,240,255,255}); //Spindle Icon
+            DrawCircle(125,475,62.5,(Color){35,36,53,255});            
             DrawTextEx(bold15,"SPINDLE RPM",(Vector2){spindleTextSizeX,550},15,0,(Color){229,228,250,255});     
-            DrawTextEx(semiBold,spindleRPMText,(Vector2){125-(spindleRPMTextSize.x/2),475-(spindleRPMTextSize.y/2)},30,0,(Color){229,228,250,255});        
+            DrawTextEx(semiBold,spindleRPMText,(Vector2){125-(spindleRPMTextSize.x/2),475-(spindleRPMTextSize.y/2)},30,0,(Color){229,228,250,255});   
+
+            
+            
             
             //Display Area
             DrawRectangle(200,0,824,350,(Color){148,149,177,255});
