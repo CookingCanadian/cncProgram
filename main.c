@@ -1,6 +1,9 @@
 #include "raylib.h"
 #include "stdio.h"
 
+#define SELECTED_TEXT (Color){229,228,250,255}
+#define UNSELECTED_TEXT (Color){170,171,198,255}
+
 int main() {
     const int screenWidth = 1024;
     const int screenHeight = 600;  
@@ -24,8 +27,10 @@ int main() {
 
     //Calculating Font Positions (Unchanging; 4Y Offset) 
     int spindleTextSizeX = 125-((MeasureTextEx(bold15,"SPINDLE RPM",15,0).x)/2);
-    int setupTextSizeY = 29-((MeasureTextEx(bold25,"SETUP",25,0).y)/2);
-    int toolsTextSizeY = 79-((MeasureTextEx(bold25,"TOOLS",25,0).y)/2);
+    int fileTextSizeY = 29-((MeasureTextEx(bold25,"FILE",25,0).y)/2);
+    int probeTextSizeY = 79-((MeasureTextEx(bold25,"PROBE",25,0).y)/2);
+    int toolTextSizeY = 129-((MeasureTextEx(bold25,"TOOL",25,0).y)/2);
+    int runTextSizeY = 179-((MeasureTextEx(bold25,"RUN",25,0).y)/2);
     
     SetTargetFPS(200);    
     if (IsFontReady(bold25) && IsFontReady(bold15) && IsFontReady(semiBold) && IsFontReady(regular)) {         
@@ -47,11 +52,42 @@ int main() {
             DrawRectangle(200,0,824,350,(Color){148,149,177,255});
 
             //Side Tabs
-            DrawRectangle(0,0,200,350,(Color){82,83,109,255});
-            DrawRectangle(0,tabHighlightYPos,200,50,(Color){148,149,177,255}); //Highlight Icon
-
-            DrawTextEx(bold25,"SETUP",(Vector2){50,setupTextSizeY},25,0,(Color){229,228,250,255}); 
-            DrawTextEx(bold25,"TOOLS",(Vector2){50,toolsTextSizeY},25,0,(Color){229,228,250,255});
+            DrawRectangle(0,0,200,350,(Color){82,83,109,255});         
+            DrawRectangleGradientH(0,tabHighlightYPos,200,50,(Color){82,83,109,255},(Color){148,149,177,255}); //Highlight Icon
+            switch(tabHighlightYPos) { //Color Animation
+                case 0:
+                    DrawTextEx(bold25,"FILE",(Vector2){20,fileTextSizeY},25,0,SELECTED_TEXT); 
+                    DrawTextEx(bold25,"PROBE",(Vector2){20,probeTextSizeY},25,0,UNSELECTED_TEXT);
+                    DrawTextEx(bold25,"TOOL",(Vector2){20,toolTextSizeY},25,0,UNSELECTED_TEXT);
+                    DrawTextEx(bold25,"RUN",(Vector2){20,runTextSizeY},25,0,UNSELECTED_TEXT);
+                    break;
+                case 50:
+                    DrawTextEx(bold25,"FILE",(Vector2){20,fileTextSizeY},25,0,UNSELECTED_TEXT); 
+                    DrawTextEx(bold25,"PROBE",(Vector2){20,probeTextSizeY},25,0,SELECTED_TEXT);
+                    DrawTextEx(bold25,"TOOL",(Vector2){20,toolTextSizeY},25,0,UNSELECTED_TEXT);
+                    DrawTextEx(bold25,"RUN",(Vector2){20,runTextSizeY},25,0,UNSELECTED_TEXT);
+                    break;
+                case 100:
+                    DrawTextEx(bold25,"FILE",(Vector2){20,fileTextSizeY},25,0,UNSELECTED_TEXT); 
+                    DrawTextEx(bold25,"PROBE",(Vector2){20,probeTextSizeY},25,0,UNSELECTED_TEXT);
+                    DrawTextEx(bold25,"TOOL",(Vector2){20,toolTextSizeY},25,0,SELECTED_TEXT);
+                    DrawTextEx(bold25,"RUN",(Vector2){20,runTextSizeY},25,0,UNSELECTED_TEXT);
+                    break;
+                case 150:
+                    DrawTextEx(bold25,"FILE",(Vector2){20,fileTextSizeY},25,0,UNSELECTED_TEXT); 
+                    DrawTextEx(bold25,"PROBE",(Vector2){20,probeTextSizeY},25,0,UNSELECTED_TEXT);
+                    DrawTextEx(bold25,"TOOL",(Vector2){20,toolTextSizeY},25,0,UNSELECTED_TEXT);
+                    DrawTextEx(bold25,"RUN",(Vector2){20,runTextSizeY},25,0,SELECTED_TEXT);
+                    break;
+                default:
+                    DrawTextEx(bold25,"FILE",(Vector2){20,fileTextSizeY},25,0,UNSELECTED_TEXT); 
+                    DrawTextEx(bold25,"PROBE",(Vector2){20,probeTextSizeY},25,0,UNSELECTED_TEXT);
+                    DrawTextEx(bold25,"TOOL",(Vector2){20,toolTextSizeY},25,0,UNSELECTED_TEXT);
+                    DrawTextEx(bold25,"RUN",(Vector2){20,runTextSizeY},25,0,UNSELECTED_TEXT);
+            }
+            DrawLineEx((Vector2){0,50},(Vector2){200,50},1,(Color){58,59,84,255});     
+            DrawLineEx((Vector2){0,100},(Vector2){200,100},1,(Color){58,59,84,255});          
+            DrawLineEx((Vector2){0,150},(Vector2){200,150},1,(Color){58,59,84,255}); 
 
             //Mouse Handler
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -63,6 +99,8 @@ int main() {
                         targetTabHighlightYPos = 50;
                     } else if (mousePosition.y >=100 && mousePosition.y < 150) { //Button 3
                         targetTabHighlightYPos = 100;
+                    } else if (mousePosition.y >=150 && mousePosition.y < 200) { //Button 4
+                        targetTabHighlightYPos = 150;
                     }
                 }
             }
