@@ -11,8 +11,8 @@ int main() {
     const int screenHeight = 600;  
 
     //CNC Values
-    float spindleRPM = 0;
-    float MAXspindleRPM = 20000;
+    float spindleRPM = 0.0;
+    float MAXspindleRPM = 20000.0;
 
     //int feedRateGlobal = 0;
 
@@ -21,7 +21,7 @@ int main() {
     int tabHighlightYPos = 0;
     int targetTabHighlightYPos = 0;    
     char spindleRPMText[5]; //00000
-    char spindleRPMPercentageText[7]; //000%
+    char spindleRPMPercentageText[7]; //000.00%
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);//Anti-Aliasing
     InitWindow(screenWidth, screenHeight, "cncProgram");
@@ -45,31 +45,22 @@ int main() {
             BeginDrawing();
             ClearBackground(RAYWHITE);        
             //Lower Dashboard      
-            //float spindlePercentage = (float)spindleRPM/MAXspindleRPM;
-            //sprintf(spindleRPMText,"%d", (int)spindleRPM);
-
             sprintf(spindleRPMText,"%.0f", spindleRPM);
             Vector2 spindleRPMTextSize = MeasureTextEx(semiBold,spindleRPMText,30,0);
 
-            sprintf(spindleRPMPercentageText, "%.2f", 100*spindleRPM/MAXspindleRPM);           
+            sprintf(spindleRPMPercentageText, "%.2f", 100*spindleRPM/MAXspindleRPM);          
             Vector2 spindleRPMPercentageTextSize = MeasureTextEx(regular15,spindleRPMPercentageText,15,0);
+            
 
-            
-            
             DrawRectangle(0,350,1024,250,(Color){43,44,64,255}); //Background   
-
             DrawRectangleGradientH(217,383,200,50,(Color){31,31,44,255},(Color){43,44,64,255}); //Feed Override            
             DrawCircle(125,475,130,(Color){43,44,64,255});            
             DrawRing((Vector2){125,475},125,130,315,405,40,(Color){241,240,255,255}); 
-
             DrawRing((Vector2){125,475},70,100,135,405,40,(Color){241,240,255,255}); //Spindle Override
             DrawCircle(125,475,62.5,(Color){35,36,53,255});            
             DrawTextEx(bold15,"SPINDLE RPM",(Vector2){spindleTextSizeX,560},15,0,SELECTED_TEXT);  
-
             DrawTextEx(regular15,spindleRPMPercentageText,(Vector2){125-(spindleRPMPercentageTextSize.x/2),500},15,0,TERTIARY_TEXT);
-
-            DrawTextEx(semiBold,spindleRPMText,(Vector2){125-(spindleRPMTextSize.x/2),475-(spindleRPMTextSize.y/2)},30,0,SELECTED_TEXT);   
-           
+            DrawTextEx(semiBold,spindleRPMText,(Vector2){125-(spindleRPMTextSize.x/2),475-(spindleRPMTextSize.y/2)},30,0,SELECTED_TEXT);              
             DrawRing((Vector2){125,475},70,100,135,(135+(270*spindleRPM/MAXspindleRPM)),40,PURPLE);
             
             //Display Area
