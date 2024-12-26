@@ -4,11 +4,12 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "NHG_medium.h"
+#include "NHG_light.h"
 
 #define PRUSSIAN_BLUE (Color){33, 45, 64, 255}
 #define CHARCOAL (Color){54, 65, 86, 255}
-#define ASH_GREY (Color){174, 183, 179, 255}
-#define HONEYDEW (Color){225, 239, 230, 255}
+#define GHOST_WHITE (Color){232, 233, 243, 255}
+#define CADET_GREY (Color){147, 163, 177, 255}
 #define IMPERIAL_RED (Color){247, 23, 53, 255}
 
 // Motor thread function
@@ -34,10 +35,9 @@ typedef struct textButton {
     Color color;
     bool isPressed;
     const char *label;
-    Vector2 textPosition;  // Store precomputed text position
+    Vector2 textPosition;  
 } textButton;
 
-// Function to check button interaction
 bool checkButtonInteraction(textButton *button) {
     Vector2 mousePos = GetMousePosition();
     bool isHover = CheckCollisionPointRec(mousePos, button->rect);
@@ -51,9 +51,11 @@ bool checkButtonInteraction(textButton *button) {
 
 Font hNHG_MEDIUM;
 Font bNHG_MEDIUM;
+Font NHG_LIGHT;
 void loadFonts() {
-    hNHG_MEDIUM = LoadFontFromMemory(".ttf", font_data, sizeof(font_data), 24, NULL, 0);
-    bNHG_MEDIUM = LoadFontFromMemory(".ttf", font_data, sizeof(font_data), 20, NULL, 0);
+    hNHG_MEDIUM = LoadFontFromMemory(".ttf", font_data_medium, sizeof(font_data_medium), 24, NULL, 0);
+    bNHG_MEDIUM = LoadFontFromMemory(".ttf", font_data_medium, sizeof(font_data_medium), 20, NULL, 0);
+    NHG_LIGHT = LoadFontFromMemory(".ttf", font_data_light, sizeof(font_data_light), 18, NULL, 0);
 }
 
 void precomputeButtonTextPositions(textButton *buttons, int buttonCount, Font font) {
@@ -69,7 +71,7 @@ void DrawCenteredText(Font font, const char *text, Vector2 position, Color color
 }
 
 void* uiThread(void* arg) {
-    InitWindow(1024, 600, "CNC Machine");
+    InitWindow(1024, 600, "cncProgram");
     loadFonts();
     SetTargetFPS(24);
 
@@ -96,14 +98,27 @@ void* uiThread(void* arg) {
                 selectedButton = i;  
             }
             DrawRectangleRec(topButtons[i].rect, topButtons[i].color);
-            DrawCenteredText(hNHG_MEDIUM, topButtons[i].label, topButtons[i].textPosition, (topButtons[i].isPressed) ? WHITE : HONEYDEW);
+            DrawCenteredText(hNHG_MEDIUM, topButtons[i].label, topButtons[i].textPosition, (topButtons[i].isPressed) ? WHITE : CADET_GREY);
         }
-
         EndDrawing();
+    }
+    switch (selectedButton) {
+        case 0: //File
+            DrawRectangle()
+            break;
+        case 1: //Align
+            break;
+        case 2: //Routine
+            break;
+        case 3: //Health
+            break;
+        default:
+            break;
     }
 
     UnloadFont(hNHG_MEDIUM);
     UnloadFont(bNHG_MEDIUM);
+    UnloadFont(NHG_LIGHT);
     CloseWindow();
 
     return NULL;

@@ -1,3 +1,4 @@
+// To test frequency of raspberryPi GPIO pin
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
