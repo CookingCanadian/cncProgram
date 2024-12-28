@@ -23,7 +23,7 @@ void* motorControlThread(void* arg) {
         printf("Motor running...\n");
 
         // Simulate motor control timing (e.g., motor step interval)
-        usleep(5000); // 5ms for example, adjust as needed
+        usleep(5000); 
     }
 
     return NULL;
@@ -52,6 +52,7 @@ bool checkButtonInteraction(textButton *button) {
 Font hNHG_MEDIUM;
 Font bNHG_MEDIUM;
 Font NHG_LIGHT;
+
 void loadFonts() {
     hNHG_MEDIUM = LoadFontFromMemory(".ttf", font_data_medium, sizeof(font_data_medium), 24, NULL, 0);
     bNHG_MEDIUM = LoadFontFromMemory(".ttf", font_data_medium, sizeof(font_data_medium), 20, NULL, 0);
@@ -103,14 +104,13 @@ void* uiThread(void* arg) {
         EndDrawing();
     }
     switch (selectedButton) {
-        case 0: //File
-            DrawRectangle()
+        case 0: // File            
             break;
-        case 1: //Align
+        case 1: // Align
             break;
-        case 2: //Routine
+        case 2: // Routine
             break;
-        case 3: //Health
+        case 3: // Health
             break;
         default:
             break;
@@ -127,27 +127,25 @@ void* uiThread(void* arg) {
 int main() {
     pthread_t motorThread, uiThreadHandle;
 
-    // Create the motor control thread
+    // Create motor thread
     if (pthread_create(&motorThread, NULL, motorControlThread, NULL) != 0) {
         perror("Failed to create motor control thread");
         return 1;
     }
 
-    // Create the UI thread
+    // Create UI thread
     if (pthread_create(&uiThreadHandle, NULL, uiThread, NULL) != 0) {
         perror("Failed to create UI thread");
         return 1;
     }
 
-    // Set the motor thread to real-time priority
+    // Give motor thread priority
     struct sched_param param;
     param.sched_priority = sched_get_priority_max(SCHED_FIFO);
     pthread_setschedparam(motorThread, SCHED_FIFO, &param);
 
     // Wait for threads to complete (UI thread will terminate on window close)
     pthread_join(uiThreadHandle, NULL);
-
-    // Note: Motor thread is likely infinite, terminate manually if needed
     pthread_cancel(motorThread);
     pthread_join(motorThread, NULL);
 
